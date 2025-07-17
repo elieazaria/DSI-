@@ -1,0 +1,199 @@
+/* src/components/BonDeSortiePreview.css */
+
+/* Styles for the main document container */
+.bon-de-sortie-document {
+    font-family:'Times New Roman', Times, serif;
+    width: 210mm; /* A4 width */
+    min-height: 297mm; /* A4 height */
+    padding: 20mm; /* Margin around the content */
+    margin: 0 auto; /* Center the block on the page if displayed in a larger area */
+    box-sizing: border-box; /* Include padding in the element's total width and height */
+    background-color: white; /* Ensure background is white for printing */
+    color: black; /* Ensure text is black for printing */
+    display: flex; /* Use flexbox for overall layout control */
+    flex-direction: column; /* Stack children vertically */
+    position: relative; /* Needed for absolute positioning if used */
+}
+
+/* Header Section */
+.bon-de-sortie-document .header {
+    text-align: center;
+    margin-bottom: 20mm; /* Space after header */
+}
+
+.bon-de-sortie-document .header h1 {
+    font-size: 14pt; /* Adjust font size */
+    margin: 0 0 3pt 0; /* Top Right Bottom Left */
+    font-weight: bold;
+}
+
+.bon-de-sortie-document .header p {
+    font-size: 10pt; /* Adjust font size */
+    margin: 0;
+}
+
+.bon-de-sortie-document .separator {
+    border-bottom: 1pt solid #000; /* Use pt for border thickness */
+    margin: 5pt auto; /* Vertical margin */
+    width: 50%; /* Adjust separator width */
+}
+
+.bon-de-sortie-document .separator-small {
+    border-bottom: 1pt solid #000;
+    margin: 3pt auto;
+    width: 30%;
+}
+
+/* Ministry Info and Date/Location Section */
+.bon-de-sortie-document .ministry-info {
+    display: flex; /* Use flexbox for horizontal layout */
+    justify-content: space-between; /* Pushes ministry info left and date/location right */
+    margin-bottom: 10mm; /* Space after this section */
+    font-size: 10pt; /* Adjust font size */
+}
+
+
+
+.bon-de-sortie-document .ministry-info .date-location {
+    text-align: right; /* Align date/location to the right */
+}
+
+/* Reference Number Section */
+.bon-de-sortie-document .reference {
+    margin-bottom: 15mm; /* Space after reference number */
+    font-size: 10pt; /* Adjust font size */
+    text-align: left; /* Align reference number to the left */
+}
+
+/* Document Title */
+.bon-de-sortie-document h2 {
+    text-align: center;
+    margin-bottom: 15mm; /* Space after title */
+    text-decoration: underline;
+    font-size: 12pt; /* Adjust font size */
+    font-weight: bold;
+}
+
+/* Table Styles */
+.bon-de-sortie-document table {
+    width: 100%; /* Table takes full width of its container */
+    border-collapse: collapse; /* Collapse borders */
+    margin-bottom: 15mm; /* Space after table */
+}
+
+.bon-de-sortie-document th,
+.bon-de-sortie-document td {
+    border: 1pt solid #000; /* Table borders */
+    padding: 5pt 8pt; /* Padding inside cells (vertical horizontal) */
+    text-align: left; /* Default text alignment in cells */
+    font-size: 9pt; /* Adjust font size in table cells */
+}
+
+.bon-de-sortie-document th {
+    background-color: #f2f2f2; /* Header background */
+    text-align: center; /* Center header text */
+    font-weight: bold;
+}
+
+/* Specific Column Widths (Adjust these based on your content) */
+.bon-de-sortie-document th:nth-child(1), /* DESIGNATION DES PIECES */
+.bon-de-sortie-document td:nth-child(1) {
+    width: 40%; /* Example width, adjust as needed */
+}
+
+.bon-de-sortie-document th:nth-child(2), /* QUANTITE */
+.bon-de-sortie-document td:nth-child(2) {
+    width: 15%; /* Example width */
+    text-align: center; /* Center quantity */
+}
+
+.bon-de-sortie-document th:nth-child(3), /* ETAT */
+.bon-de-sortie-document td:nth-child(3) {
+     width: 15%; /* Example width */
+     text-align: center; /* Center état */
+}
+
+.bon-de-sortie-document th:nth-child(4), /* OBSERVATIONS */
+.bon-de-sortie-document td:nth-child(4) {
+    width: 30%; /* Example width */
+    /* Keep default text-align left */
+}
+
+
+.bon-de-sortie-document .total-row td {
+    font-weight: bold;
+    /* Ensure the total quantity cell is also centered if needed */
+     &:nth-child(2) {
+         text-align: center;
+     }
+}
+
+/* Footer Section (Détenteur) */
+.bon-de-sortie-document .footer {
+    text-align: right; /* Align footer content to the right */
+    margin-top: 30mm; /* Space above the footer */
+    /* Position it absolutely at the bottom if needed, requires parent position: relative */
+    /* position: absolute;
+    bottom: 20mm; // Match padding
+    right: 20mm; // Match padding */
+}
+
+.bon-de-sortie-document .footer .detenteur {
+    font-weight: bold;
+    margin-bottom: 5mm; /* Space below the label */
+}
+
+.bon-de-sortie-document .footer .detenteur-name {
+    /* Style for the actual name line */
+     margin-top: 20mm; /* Space for signature line */
+     border-bottom: 1pt solid #000; /* Signature line */
+     display: inline-block; /* Line only under the name area */
+     min-width: 50mm; /* Minimum width for the signature line */
+     text-align: center; /* Center the name above the line */
+}
+
+
+/* Optional: Styles for print media */
+@media print {
+    .bon-de-sortie-document {
+        width: 210mm;
+        height: 297mm;
+        padding: 10mm 15mm; /* Slightly less padding for printing */
+        margin: 0;
+        box-shadow: none; /* Remove shadow if any */
+    }
+
+    /* Adjust font sizes slightly for print if needed */
+    .bon-de-sortie-document h1 { font-size: 13pt; }
+    .bon-de-sortie-document h2 { font-size: 11pt; }
+    .bon-de-sortie-document p,
+    .bon-de-sortie-document th,
+    .bon-de-sortie-document td { font-size: 8pt; }
+
+    /* Ensure no elements cause overflow */
+    table {
+        table-layout: fixed; /* Helps with column widths */
+    }
+
+    /* Hide elements not needed in print (like buttons) */
+    .bon-de-sortie-document button,
+    .bon-de-sortie-document .pdf-generate-button { /* Assuming you give your button a class */
+        display: none;
+    }
+
+     /* Adjust margin for the content div that has the ref to make space for footer if needed */
+    .bon-de-sortie-document > div[ref] { /* Targeting the div with the ref attribute */
+         margin-bottom: 30mm; /* Ensure space for the footer area */
+    }
+
+    /* Force the footer to the bottom if absolute positioning is used */
+     .bon-de-sortie-document .footer {
+         position: absolute;
+         bottom: 10mm; /* Match print padding */
+         right: 15mm; /* Match print padding */
+     }
+}
+
+/* Styles for the list of items to select (outside the PDF preview) */
+/* Keep your existing styles for the table displaying items for selection */
+/* ... */
