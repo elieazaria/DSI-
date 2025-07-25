@@ -21,6 +21,7 @@ import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 import Demand from "./pages/AuthPages/Demand";
+import MaterialRequestForm from "./components/equivalence/DemandeMateriel";
 
 export default function App() {
   return (
@@ -40,6 +41,7 @@ export default function App() {
           <Route element={<AppLayout />}>
             <Route path="/home" element={<Home />} /> {/* La page d'accueil réelle après connexion */}
 
+            <Route path="/demande" element={<MaterialRequestForm />} />
             {/* Others Page */}
             <Route path="/profile" element={<UserProfiles />} />
             <Route path="/calendar" element={<Calendar />} />
