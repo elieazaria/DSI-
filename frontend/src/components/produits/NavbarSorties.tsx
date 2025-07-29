@@ -1,14 +1,14 @@
 import React from 'react';
 import Button from "../../components/ui/button/Button";
-import ColumnVisibilityFilter from "./ColumnVisibilityFilter"; // Importez le nouveau composant
+import ColumnVisibilityFilter from "./ColumnVisibilityFilter";
+import { FaPrint, FaFileExcel } from 'react-icons/fa'; // Importez les icônes nécessaires
 
 interface NavbarSortiesProps {
   onOpen: () => void;
   onExportToExcel: () => void;
   onColumnVisibilityChange: (columnName: string, isVisible: boolean) => void;
-  // Ajoutez une prop pour la liste des titres de colonnes
   columnTitles: string[];
-  initialVisibleColumns?: string[]; // Optionnel, pour initialiser les colonnes visibles
+  initialVisibleColumns?: string[];
 }
 
 const NavbarSorties: React.FC<NavbarSortiesProps> = ({
@@ -20,14 +20,17 @@ const NavbarSorties: React.FC<NavbarSortiesProps> = ({
 }) => {
   return (
     <>
-      <div className="flex items-center gap-5 sm:gap-5 justify-between"> 
+      <div className="flex items-center gap-5 sm:gap-5 justify-between">
         <Button size="sm" variant="primary" onClick={onOpen}>
+          {/* Icône d'impression ajoutée à gauche du texte */}
+          <FaPrint className="mr-2" /> 
           Afficher Bon de Sortie
         </Button>
         <Button size="sm" variant="primary" onClick={onExportToExcel}>
+          {/* Icône d'exportation (Excel) ajoutée à gauche du texte */}
+          <FaFileExcel className="mr-2" />
           Exporter en Excel
         </Button>
-        {/* Composant de filtre de colonnes */}
         <ColumnVisibilityFilter
           columns={columnTitles}
           onColumnToggle={onColumnVisibilityChange}
@@ -39,5 +42,3 @@ const NavbarSorties: React.FC<NavbarSortiesProps> = ({
 }
 
 export default NavbarSorties;
-
-

@@ -1,4 +1,4 @@
-import query from "../config/db.js"; // Assurez-vous que votre db.js exporte 'pool' directement
+import { query } from "../db.js";
 
 /**
  * Récupère les informations d'un employé par son matricule.
@@ -8,8 +8,7 @@ import query from "../config/db.js"; // Assurez-vous que votre db.js exporte 'po
 export const getEmployeeById = async (employeeId) => {
   try {
     const { rows } = await query(
-      // Utilisation de pool.query
-      `SELECT employee_id, first_name, last_name, position, department, office_number
+      `SELECT employee_id, nom, prenom, fonction, departement, numero_porte
              FROM employees
              WHERE employee_id = $1`,
       [employeeId]
@@ -28,15 +27,15 @@ export const getEmployeeById = async (employeeId) => {
  * Crée une nouvelle demande de matériel.
  * @param {string} employeeId - Le matricule de l'employé.
  * @param {string} designation - La désignation du matériel.
- * @param {number} quantity - La quantité.
- * @param {string} technicalCharacteristics - Les caractéristiques techniques.
+ * @param {number} quantite - La quantité.
+ * @param {string} caracteristiques- Les caractéristiques techniques.
  * @returns {Promise<object>} La demande de matériel créée.
  */
 export const createMaterialRequest = async (
   employeeId,
   designation,
-  quantity,
-  technicalCharacteristics
+  quantite,
+  caracteristiques
 ) => {
   try {
     // Générer une référence unique pour la demande
@@ -44,10 +43,10 @@ export const createMaterialRequest = async (
 
     const { rows } = await query(
       // Utilisation de pool.query
-      `INSERT INTO material_requests (request_id, employee_id, designation, quantity, technical_characteristics)
+      `INSERT INTO material_requests (request_id, employee_id, designation, quantite, caracteristiques)
              VALUES ($1, $2, $3, $4, $5)
              RETURNING *`, // Retourne la ligne insérée
-      [request_id, employeeId, designation, quantity, technicalCharacteristics]
+      [request_id, employeeId, designation, quantite, caracteristiques]
     );
     return rows[0];
   } catch (error) {
@@ -67,8 +66,8 @@ export const getAllMaterialRequests = async () => {
   try {
     const { rows } = await query(
       // Utilisation de pool.query
-      `SELECT mr.request_id, mr.designation, mr.quantity, mr.technical_characteristics, mr.request_date, mr.status,
-                    e.employee_id, e.first_name, e.last_name, e.position, e.department, e.office_number
+      `SELECT mr.request_id, mr.designation, mr.quantite, mr.caracteristiques, mr.request_date, mr.status,
+                    e.employee_id, e.nom, e.prenom, e.fonction, e.department, e.numero_porte
              FROM material_requests mr
              JOIN employees e ON mr.employee_id = e.employee_id
              ORDER BY mr.request_date DESC`
@@ -86,18 +85,17 @@ export const getAllMaterialRequests = async () => {
 /**
  * Met à jour le statut d'une demande de matériel.
  * @param {string} requestId - L'ID de la demande.
- * @param {string} status - Le nouveau statut.
+ * @param {string} statut - Le nouveau statut.
  * @returns {Promise<object|null>} La demande mise à jour ou null si non trouvée.
  */
-export const updateMaterialRequestStatus = async (requestId, status) => {
+export const updateMaterialRequestStatus = async (requestId, statut) => {
   try {
     const { rows } = await query(
-      // Utilisation de pool.query
       `UPDATE material_requests
-             SET status = $1
+             SET statut = $1
              WHERE request_id = $2
              RETURNING *`,
-      [status, requestId]
+      [statut, requestId]
     );
     return rows[0] || null;
   } catch (error) {

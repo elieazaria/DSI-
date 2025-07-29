@@ -1,4 +1,4 @@
-import * as materialRequestService from "../services/materialRequestService.js"; // Importe toutes les fonctions du service
+import * as materialRequestService from "../services/demandeServices.js"; // Importe toutes les fonctions du service
 
 /**
  * Gère le processus de demande de matériel en deux étapes :
@@ -10,8 +10,7 @@ import * as materialRequestService from "../services/materialRequestService.js";
  * soit l'employee_id avec les détails de la demande.
  */
 export const handleMaterialRequestSubmission = async (req, res) => {
-  const { employee_id, designation, quantity, technical_characteristics } =
-    req.body;
+  const { employee_id, designation, quantite, caracteristiques } = req.body;
 
   if (!employee_id) {
     return res
@@ -23,11 +22,9 @@ export const handleMaterialRequestSubmission = async (req, res) => {
     const employee = await materialRequestService.getEmployeeById(employee_id);
 
     if (!employee) {
-      return res
-        .status(404)
-        .json({
-          message: "Employé non trouvé. Veuillez vérifier le matricule.",
-        });
+      return res.status(404).json({
+        message: "Employé non trouvé. Veuillez vérifier le matricule.",
+      });
     }
 
     // Si seule l'ID de l'employé est fournie, cela signifie que le frontend veut afficher les détails.
@@ -37,43 +34,40 @@ export const handleMaterialRequestSubmission = async (req, res) => {
           "Employé trouvé. Veuillez maintenant saisir les détails de la demande.",
         employeeDetails: {
           employee_id: employee.employee_id,
-          first_name: employee.first_name,
-          last_name: employee.last_name,
-          position: employee.position,
-          department: employee.department,
-          office_number: employee.office_number,
+          nom: employee.nom,
+          prenom: employee.prenom,
+          fonction: employee.fonction,
+          departement: employee.departement,
+          numero_porte: employee.numero_porte,
         },
       });
     }
 
     // Si les détails de la demande sont également fournis, alors on crée la demande.
-    if (!designation || !quantity) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "La désignation et la quantité sont obligatoires pour créer une demande.",
-        });
+    if (!designation || !quantite) {
+      return res.status(400).json({
+        message:
+          "La désignation et la quantité sont obligatoires pour créer une demande.",
+      });
     }
 
     const newRequest = await materialRequestService.createMaterialRequest(
       employee_id,
       designation,
-      quantity,
-      technical_characteristics
+      quantite,
+      caracteristiques
     );
 
     res.status(201).json({
       message: "Demande de matériel créée avec succès.",
       request: newRequest,
       employeeDetails: {
-        // Vous pouvez renvoyer les détails de l'employé pour confirmation
         employee_id: employee.employee_id,
-        first_name: employee.first_name,
-        last_name: employee.last_name,
-        position: employee.position,
-        department: employee.department,
-        office_number: employee.office_number,
+        nom: employee.nom,
+        prenom: employee.prenom,
+        fonction: employee.fonction,
+        departement: employee.departement,
+        numero_porte: employee.numero_porte,
       },
     });
   } catch (error) {
@@ -112,14 +106,14 @@ export const getAllRequests = async (req, res) => {
  */
 export const updateRequestStatus = async (req, res) => {
   const { requestId } = req.params;
-  const { status } = req.body;
+  const { statut } = req.body;
 
-  if (!status) {
+  if (!statut) {
     return res.status(400).json({ message: "Le statut est obligatoire." });
   }
 
   const allowedStatuses = ["En attente", "Approuvée", "Rejetée", "Livrée"];
-  if (!allowedStatuses.includes(status)) {
+  if (!allowedStatuses.includes(statut)) {
     return res.status(400).json({ message: "Statut invalide." });
   }
 
@@ -127,7 +121,7 @@ export const updateRequestStatus = async (req, res) => {
     const updatedRequest =
       await materialRequestService.updateMaterialRequestStatus(
         requestId,
-        status
+        statut
       );
     if (updatedRequest) {
       res.status(200).json({

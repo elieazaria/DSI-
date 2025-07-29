@@ -5,24 +5,27 @@ import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
 
+interface EmployeeDetails {
+    last_name: string;
+    first_name: string;
+    position: string;
+    department: string;
+    office_number: string;
+}
+
 export default function MaterialRequestForm() {
     const { isOpen, openModal, closeModal } = useModal();
 
-    // State pour le matricule de l'employé
     const [employeeId, setEmployeeId] = useState('');
-    // State pour stocker les détails de l'employé une fois récupérés
-    const [employeeDetails, setEmployeeDetails] = useState(null);
-    // States pour les champs de la demande de matériel
+    const [employeeDetails, setEmployeeDetails] = useState<EmployeeDetails | null>(null);
     const [designation, setDesignation] = useState('');
     const [quantity, setQuantity] = useState('');
     const [technicalCharacteristics, setTechnicalCharacteristics] = useState('');
-    // State pour la gestion du chargement et des erreurs
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [successMessage, setSuccessMessage] = useState(null);
-    const [generatedReference, setGeneratedReference] = useState(null);
+    const [error, setError] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [generatedReference, setGeneratedReference] = useState<string | null>(null);
 
-    // Fonction pour réinitialiser le formulaire
     const resetForm = () => {
         setEmployeeId('');
         setEmployeeDetails(null);
@@ -34,7 +37,6 @@ export default function MaterialRequestForm() {
         setGeneratedReference(null);
     };
 
-    // Gère la vérification du matricule de l'employé
     const handleCheckEmployee = async () => {
         setError(null);
         setSuccessMessage(null);
@@ -54,25 +56,23 @@ export default function MaterialRequestForm() {
                 throw new Error(data.message || 'Erreur lors de la vérification du matricule.');
             }
 
-            setEmployeeDetails(data.employeeDetails);
+            setEmployeeDetails(data.employeeDetails as EmployeeDetails);
             setSuccessMessage(data.message);
-        } catch (err) {
+        } catch (err: any) {
             setError(err.message);
-            setEmployeeDetails(null); // Réinitialiser les détails de l'employé en cas d'erreur
+            setEmployeeDetails(null);
         } finally {
             setIsLoading(false);
         }
     };
 
-    // Gère la soumission de la demande de matériel
-    const handleSubmitRequest = async (e) => {
-        e.preventDefault(); // Empêche le rechargement de la page
+    const handleSubmitRequest = async (e: React.FormEvent) => {
+        e.preventDefault();
         setError(null);
         setSuccessMessage(null);
         setGeneratedReference(null);
         setIsLoading(true);
 
-        // Validation simple côté client
         if (!designation || !quantity || !employeeId) {
             setError("Veuillez remplir tous les champs obligatoires (désignation, quantité).");
             setIsLoading(false);
@@ -88,7 +88,7 @@ export default function MaterialRequestForm() {
                 body: JSON.stringify({
                     employee_id: employeeId,
                     designation,
-                    quantity: parseInt(quantity, 10), // Convertir en nombre
+                    quantity: parseInt(quantity, 10),
                     technical_characteristics: technicalCharacteristics,
                 }),
             });
@@ -101,18 +101,16 @@ export default function MaterialRequestForm() {
 
             setSuccessMessage(data.message);
             setGeneratedReference(data.request.request_id);
-            // Optionnel: Réinitialiser les champs de la demande après succès
             setDesignation('');
             setQuantity('');
             setTechnicalCharacteristics('');
-        } catch (err) {
+        } catch (err: any) {
             setError(err.message);
         } finally {
             setIsLoading(false);
         }
     };
 
-    // Fonction pour fermer le modal et réinitialiser l'état
     const handleCloseModal = () => {
         resetForm();
         closeModal();
@@ -123,7 +121,6 @@ export default function MaterialRequestForm() {
             <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
                 <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
                     <div className="flex flex-col items-center w-full gap-6 xl:flex-row">
-                        {/* Supprimé l'image d'utilisateur et les liens sociaux pour simplifier */}
                         <div className="order-3 xl:order-2">
                             <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">
                                 Formulaire de Demande de Matériel Informatique
@@ -158,7 +155,8 @@ export default function MaterialRequestForm() {
             </div>
 
             <Modal isOpen={isOpen} onClose={handleCloseModal} className="max-w-[700px] m-4">
-                <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+                {/* Conteneur principal du modal : Ajout de 'h-full flex flex-col' */}
+                <div className="relative w-full max-w-[700px] h-full flex flex-col rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                     <div className="px-2 pr-14">
                         <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
                             Demande de Matériel Informatique
@@ -168,8 +166,10 @@ export default function MaterialRequestForm() {
                         </p>
                     </div>
 
-                    <form onSubmit={employeeDetails ? handleSubmitRequest : handleCheckEmployee} className="flex flex-col">
-                        <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
+                    {/* Formulaire : flex-grow pour prendre l'espace disponible, overflow-y-auto pour le scroll */}
+                    <form onSubmit={employeeDetails ? handleSubmitRequest : handleCheckEmployee} className="flex flex-col flex-grow">
+                        {/* Contenu scrollable du formulaire : suppression de h-[450px] et ajout de flex-grow */}
+                        <div className="custom-scrollbar overflow-y-auto px-2 pb-3 flex-grow">
                             {/* Section Saisie Matricule */}
                             <div className="mb-7">
                                 <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
@@ -184,14 +184,11 @@ export default function MaterialRequestForm() {
                                             value={employeeId}
                                             onChange={(e) => setEmployeeId(e.target.value)}
                                             placeholder="Ex: EMP001"
-                                            
-                                            //disabled={isLoading || employeeDetails} // Désactiver une fois l'employé trouvé
                                         />
                                     </div>
                                     {!employeeDetails && (
                                         <div className="col-span-2">
                                             <Button
-                                                //type="button" // Important: pour ne pas soumettre tout le formulaire
                                                 size="sm"
                                                 onClick={handleCheckEmployee}
                                                 disabled={isLoading || !employeeId}
@@ -249,7 +246,6 @@ export default function MaterialRequestForm() {
                                                 value={designation}
                                                 onChange={(e) => setDesignation(e.target.value)}
                                                 placeholder="Ex: Ordinateur portable, Écran, Souris"
-                                                
                                             />
                                         </div>
                                         <div className="col-span-2 lg:col-span-1">
@@ -261,18 +257,15 @@ export default function MaterialRequestForm() {
                                                 onChange={(e) => setQuantity(e.target.value)}
                                                 min="1"
                                                 placeholder="1"
-                                            
                                             />
                                         </div>
                                         <div className="col-span-2">
                                             <Label htmlFor="technicalCharacteristics">Caractéristiques Techniques</Label>
-                                            {/* Utilisez une textarea pour de multiples lignes */}
                                             <textarea
                                                 id="technicalCharacteristics"
                                                 value={technicalCharacteristics}
                                                 onChange={(e) => setTechnicalCharacteristics(e.target.value)}
                                                 placeholder="Ex: Modèle Dell XPS 15, Processeur i7, 16Go RAM, SSD 512Go"
-                                                //rows="3"
                                                 className="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white/90 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             ></textarea>
                                         </div>
@@ -291,12 +284,13 @@ export default function MaterialRequestForm() {
                             )}
                         </div>
 
+                        {/* Pied de page du modal : ne pas scrollable */}
                         <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
                             <Button size="sm" variant="outline" onClick={handleCloseModal}>
                                 Fermer
                             </Button>
-                            {employeeDetails && ( // Le bouton de soumission n'apparaît que si l'employé est validé
-                                <Button size="sm"  disabled={isLoading}>
+                            {employeeDetails && (
+                                <Button size="sm" disabled={isLoading}>
                                     {isLoading ? 'Soumission...' : 'Soumettre Demande'}
                                 </Button>
                             )}
