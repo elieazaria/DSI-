@@ -28,7 +28,7 @@ export const handleMaterialRequestSubmission = async (req, res) => {
     }
 
     // Si seule l'ID de l'employé est fournie, cela signifie que le frontend veut afficher les détails.
-    if (!designation && !quantity) {
+    if (!designation && !quantite) {
       return res.status(200).json({
         message:
           "Employé trouvé. Veuillez maintenant saisir les détails de la demande.",
@@ -44,6 +44,7 @@ export const handleMaterialRequestSubmission = async (req, res) => {
     }
 
     // Si les détails de la demande sont également fournis, alors on crée la demande.
+
     if (!designation || !quantite) {
       return res.status(400).json({
         message:

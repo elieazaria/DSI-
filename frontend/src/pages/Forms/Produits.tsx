@@ -38,7 +38,7 @@ export default function BasicTables() {
   const fetchClients = async () => {
     try {
       const response = await axios.get('http://localhost:3000/api/produits');
-      setTableData(response.data); // Set the fetched data
+      setTableData(response.data); 
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);

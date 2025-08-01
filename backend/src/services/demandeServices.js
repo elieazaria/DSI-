@@ -1,10 +1,7 @@
 import { query } from "../db.js";
 
-/**
- * Récupère les informations d'un employé par son matricule.
- * @param {string} employeeId - Le matricule de l'employé.
- * @returns {Promise<object|null>} Les informations de l'employé ou null si non trouvé.
- */
+//Récupère les informations d'un employé par son matricule.
+
 export const getEmployeeById = async (employeeId) => {
   try {
     const { rows } = await query(
@@ -66,11 +63,11 @@ export const getAllMaterialRequests = async () => {
   try {
     const { rows } = await query(
       // Utilisation de pool.query
-      `SELECT mr.request_id, mr.designation, mr.quantite, mr.caracteristiques, mr.request_date, mr.status,
-                    e.employee_id, e.nom, e.prenom, e.fonction, e.department, e.numero_porte
+      `SELECT mr.request_id, mr.designation, mr.quantite, mr.caracteristiques, mr.request_date, mr.statut,
+                    e.employee_id, e.nom, e.prenom, e.fonction, e.departement, e.numero_porte
              FROM material_requests mr
              JOIN employees e ON mr.employee_id = e.employee_id
-             ORDER BY mr.request_date DESC`
+             ORDER BY mr.request_date ASC`
     );
     return rows;
   } catch (error) {

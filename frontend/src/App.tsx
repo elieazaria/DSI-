@@ -15,13 +15,15 @@ import Calendar from "./pages/Calendar";
 import BasicTables from "./pages/Tables/BasicTables";
 import FormElements from "./pages/Forms/FormElements";
 import Produits from "./pages/Forms/Produits";
-import Sorties from "./pages/Equivalence/Sorties"
+import Sorties from "./pages/Equivalence/Sorties";
+import Demandes from "./pages/Equivalence/Demandes"
 import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 import Demand from "./pages/AuthPages/Demand";
 import MaterialRequestForm from "./components/equivalence/DemandeMateriel";
+import MaterialRequestList from "./components/equivalence/ListeDemand";
 
 export default function App() {
   return (
@@ -40,7 +42,7 @@ export default function App() {
           {/* Dashboard Layout - Ces routes seront accessibles après la connexion */}
           <Route element={<AppLayout />}>
             <Route path="/home" element={<Home />} /> {/* La page d'accueil réelle après connexion */}
-
+            <Route path="/demandeliste" element={<Demandes />} />
             <Route path="/demande" element={<MaterialRequestForm />} />
             {/* Others Page */}
             <Route path="/profile" element={<UserProfiles />} />
